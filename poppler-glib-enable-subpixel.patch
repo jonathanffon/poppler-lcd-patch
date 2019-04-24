@@ -4,15 +4,15 @@ Subject:
   Thanks to Yichao Zhou for his subpixel patch of previous poppler-0.43.
 ---
 git diff --stat
- glib/poppler-page.cc        | 16 ++++++++++++++++
+ glib/poppler-page.cc        | 18 ++++++++++++++++++
  glib/poppler-page.h         |  1 +
- 2 files changed, 17 insertions(+), 0 deletions(-)
+ 2 files changed, 19 insertions(+), 0 deletions(-)
 
 diff --git a/glib/poppler-page.cc b/glib/poppler-page.cc
 index dc82afc4..ea396abe 100644
 --- a/glib/poppler-page.cc
 +++ b/glib/poppler-page.cc
-@@ -346,6 +346,12 @@ _poppler_page_render (PopplerPage      *page,
+@@ -346,6 +346,14 @@ _poppler_page_render (PopplerPage      *page,
      page->text = new TextPage (false);
      output_dev->setTextPage (page->text);
    }
@@ -21,6 +21,8 @@ index dc82afc4..ea396abe 100644
 +    output_dev->setAntialias(CAIRO_ANTIALIAS_SUBPIXEL);
 +    cairo_set_source_rgb (cairo, 1., 1., 1.);
 +    cairo_paint (cairo);
++  } else {
++    output_dev->setAntialias(CAIRO_ANTIALIAS_DEFAULT);
 +  }
    /* NOTE: instead of passing -1 we should/could use cairo_clip_extents()
     * to get a bounding box */
