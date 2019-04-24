@@ -5,12 +5,12 @@ Subject:
 ---
 git diff --stat
  poppler/CairoFontEngine.cc  |  6 +++---
- poppler/CairoOutputDev.cc   | 14 ++++++++++++++
+ poppler/CairoOutputDev.cc   | 12 ++++++++++++
  poppler/Gfx.cc              | 31 +++++++++++++++++++++++++++++++
  poppler/Gfx.h               |  3 +++
  poppler/Page.cc             | 12 ++++++++++++
  poppler/Page.h              |  3 +++
- 6 files changed, 66 insertions(+), 3 deletions(-)
+ 6 files changed, 64 insertions(+), 3 deletions(-)
 
 diff --git a/poppler/CairoFontEngine.cc b/poppler/CairoFontEngine.cc
 index bf6bd88d..d9e42304 100644
@@ -47,24 +47,22 @@ diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
 index d2769a22..0ae08853 100644
 --- a/poppler/CairoOutputDev.cc
 +++ b/poppler/CairoOutputDev.cc
-@@ -1431,6 +1431,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
+@@ -1431,6 +1431,8 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
  void CairoOutputDev::endString(GfxState *state)
  {
    int render;
 +  GfxFontType fontType;
++  cairo_antialias_t prev_antialias =  this->antialias;
  
    if (!currentFont)
      return;
-@@ -1448,6 +1449,15 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1448,6 +1450,12 @@ void CairoOutputDev::endString(GfxState *state)
      goto finish;
    }
  
 +  fontType = state->getFont()->getType();
-+  // Do not enable subpixel rendering for type3 font
-+  // For some reason it does not work
-+  cairo_antialias_t prev_antialias;
++  // Subpixel rendering for type3 font does not work
 +  if (fontType == fontType3) {
-+      prev_antialias = this->antialias;
 +      setAntialias(CAIRO_ANTIALIAS_DEFAULT);
 +  }
 +
