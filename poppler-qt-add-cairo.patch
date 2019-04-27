@@ -90,7 +90,7 @@ index 81db4eaf..635e44f9 100644
      }
  
 diff --git a/qt5/src/poppler-page.cc b/qt5/src/poppler-page.cc
-index 3e750620..f307da62 100644
+index 3e750620..8bd8937c 100644
 --- a/qt5/src/poppler-page.cc
 +++ b/qt5/src/poppler-page.cc
 @@ -48,6 +48,7 @@
@@ -119,8 +119,8 @@ index 3e750620..f307da62 100644
 +    {
 +#if defined(HAVE_CAIRO)
 +      CairoOutputDev *output_dev = new CairoOutputDev();
-+      bool subpixel_supported = m_page->page->supportSubpixelRendering (output_dev);
-+      if (subpixel_supported) {
++      bool subpixel_suited = m_page->page->suitSubpixelRendering (output_dev);
++      if (subpixel_suited) {
 +        output_dev->setAntialias(CAIRO_ANTIALIAS_SUBPIXEL);
 +      }
 +      output_dev->startDoc(m_page->parentDoc->doc);

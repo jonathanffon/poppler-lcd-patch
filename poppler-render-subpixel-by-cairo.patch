@@ -5,12 +5,12 @@ Subject:
 ---
 git diff --stat
  poppler/CairoFontEngine.cc  |  6 +++---
- poppler/CairoOutputDev.cc   | 12 ++++++++++++
+ poppler/CairoOutputDev.cc   |  8 ++++++++
  poppler/Gfx.cc              | 31 +++++++++++++++++++++++++++++++
  poppler/Gfx.h               |  3 +++
  poppler/Page.cc             | 12 ++++++++++++
  poppler/Page.h              |  3 +++
- 6 files changed, 64 insertions(+), 3 deletions(-)
+ 6 files changed, 60 insertions(+), 3 deletions(-)
 
 diff --git a/poppler/CairoFontEngine.cc b/poppler/CairoFontEngine.cc
 index bf6bd88d..d9e42304 100644
@@ -44,42 +44,38 @@ index bf6bd88d..d9e42304 100644
    if (cairo_font_face_set_user_data (l->font_face,
  				     &_ft_cairo_key,
 diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
-index d2769a22..0ae08853 100644
+index d2769a22..6ed93052 100644
 --- a/poppler/CairoOutputDev.cc
 +++ b/poppler/CairoOutputDev.cc
-@@ -1431,6 +1431,8 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
+@@ -1431,6 +1431,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
  void CairoOutputDev::endString(GfxState *state)
  {
    int render;
-+  GfxFontType fontType;
-+  cairo_antialias_t prev_antialias =  this->antialias;
++  cairo_operator_t prev_op = cairo_get_operator(cairo);
  
    if (!currentFont)
      return;
-@@ -1448,6 +1450,12 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1448,6 +1449,12 @@ void CairoOutputDev::endString(GfxState *state)
      goto finish;
    }
  
-+  fontType = state->getFont()->getType();
-+  // Subpixel rendering for type3 font does not work
-+  if (fontType == fontType3) {
-+      setAntialias(CAIRO_ANTIALIAS_DEFAULT);
++  // CAIRO_OPERATOR_DEST_OVER for subpixel purpose doesnot fit type3 font
++  if (state->getFont()->getType() == fontType3
++      && this->antialias == CAIRO_ANTIALIAS_SUBPIXEL) {
++    cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
 +  }
 +
    if (!(render & 1)) {
      LOG (printf ("fill string\n"));
      cairo_set_source (cairo, fill_pattern);
-@@ -1498,6 +1508,10 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1496,6 +1503,7 @@ void CairoOutputDev::endString(GfxState *state)
+       cairo_new_path (cairo_shape);
+     }
    }
++  cairo_set_operator(cairo, prev_op);
  
  finish:
-+  // pair with the previous cairo_save to disable subpixel rendering for type3 fonts
-+  if (fontType == fontType3) {
-+    setAntialias(prev_antialias);
-+  }
    gfree (glyphs);
-   glyphs = nullptr;
-   if (use_show_text_glyphs) {
 diff --git a/poppler/Gfx.cc b/poppler/Gfx.cc
 index 8bf141e9..63a3cb4d 100644
 --- a/poppler/Gfx.cc
@@ -137,38 +133,38 @@ index 19462e8d..b0bbd11c 100644
  
    void drawForm(Object *str, Dict *resDict, const double *matrix, const double *bbox,
 diff --git a/poppler/Page.cc b/poppler/Page.cc
-index d137ec4b..897ff263 100644
+index d137ec4b..5131a69a 100644
 --- a/poppler/Page.cc
 +++ b/poppler/Page.cc
 @@ -336,6 +336,18 @@ Dict *Page::getResourceDictCopy(XRef *xrefA) {
    return dict ? dict->copy(xrefA) : nullptr;
  }
  
-+bool Page::supportSubpixelRendering(OutputDev *out) {
++bool Page::suitSubpixelRendering(OutputDev *out) {
 +  PDFRectangle box;
-+  bool supported = false;
++  bool suited = false;
 +  Object obj = contents.fetch(xref);
 +
 +  if (!obj.isNull()) {
 +    Gfx gfx(doc, out, attrs->getResourceDict(), &box, NULL);
-+    supported = gfx.checkNormalBlendModeOnly(&obj);
++    suited = gfx.checkNormalBlendModeOnly(&obj);
 +  }
-+  return supported;
++  return suited;
 +}
 +
  void Page::replaceXRef(XRef *xrefA) {
    Object obj1;
    Dict *pageDict = pageObj.getDict()->copy(xrefA);
 diff --git a/poppler/Page.h b/poppler/Page.h
-index 01f056f9..d6547a79 100644
+index 01f056f9..81b1d01c 100644
 --- a/poppler/Page.h
 +++ b/poppler/Page.h
 @@ -183,6 +183,9 @@ public:
    Object *getResourceDictObject();
    Dict *getResourceDictCopy(XRef *xrefA);
  
-+  // Whether the content in this page supports subpixel rendering (lcdfilter)
-+  bool supportSubpixelRendering(OutputDev *out);
++  // Whether the content in this page suits subpixel rendering (lcdfilter)
++  bool suitSubpixelRendering(OutputDev *out);
 +
    // Get annotations array.
    Object getAnnotsObject(XRef *xrefA = nullptr) { return annotsObj.fetch(xrefA ? xrefA : xref); }

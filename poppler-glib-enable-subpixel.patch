@@ -9,15 +9,15 @@ git diff --stat
  2 files changed, 19 insertions(+), 0 deletions(-)
 
 diff --git a/glib/poppler-page.cc b/glib/poppler-page.cc
-index dc82afc4..ea396abe 100644
+index dc82afc4..f79530e7 100644
 --- a/glib/poppler-page.cc
 +++ b/glib/poppler-page.cc
 @@ -346,6 +346,14 @@ _poppler_page_render (PopplerPage      *page,
      page->text = new TextPage (false);
      output_dev->setTextPage (page->text);
    }
-+  bool subpixel_supported = poppler_page_support_subpixel_rendering (page);
-+  if (!printing && subpixel_supported) {
++  bool subpixel_suited = poppler_page_suit_subpixel_rendering (page);
++  if (!printing && subpixel_suited) {
 +    output_dev->setAntialias(CAIRO_ANTIALIAS_SUBPIXEL);
 +    cairo_set_source_rgb (cairo, 1., 1., 1.);
 +    cairo_paint (cairo);
@@ -27,29 +27,29 @@ index dc82afc4..ea396abe 100644
    /* NOTE: instead of passing -1 we should/could use cairo_clip_extents()
     * to get a bounding box */
    cairo_save (cairo);
-@@ -2413,3 +2419,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
+@@ -2413,3 +2421,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
  
    return g_list_reverse(attributes);
  }
 +
 +gboolean
-+poppler_page_support_subpixel_rendering (PopplerPage        *page)
++poppler_page_suit_subpixel_rendering (PopplerPage        *page)
 +{
 +  CairoOutputDev *output_dev;
 +  g_return_val_if_fail (POPPLER_IS_PAGE (page), FALSE);
 +
 +  output_dev = page->document->output_dev;
-+  return page->page->supportSubpixelRendering(output_dev);
++  return page->page->suitSubpixelRendering(output_dev);
 +}
 diff --git a/glib/poppler-page.h b/glib/poppler-page.h
-index f99f0920..8ff914f4 100644
+index f99f0920..f4b5692b 100644
 --- a/glib/poppler-page.h
 +++ b/glib/poppler-page.h
 @@ -147,6 +147,7 @@ void                   poppler_page_free_text_attributes (GList              *li
  POPPLER_PUBLIC
  GList *        poppler_page_get_text_attributes_for_area (PopplerPage        *page,
                                                            PopplerRectangle   *area);
-+gboolean         poppler_page_support_subpixel_rendering (PopplerPage        *page);
++gboolean         poppler_page_suit_subpixel_rendering (PopplerPage        *page);
  
  /* A rectangle on a page, with coordinates in PDF points. */
  #define POPPLER_TYPE_RECTANGLE             (poppler_rectangle_get_type ())
