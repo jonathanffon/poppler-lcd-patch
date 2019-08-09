@@ -39,7 +39,7 @@ If you have a different version of `poppler` installed, you may encounter depend
   > 
 
 ## Build from source
-- Download desired poppler version (e.g. pkgver=0.76.0) from [freedesktop website](https://poppler.freedesktop.org/) .
+- Download desired poppler version (e.g. pkgver=0.79.0) from [freedesktop website](https://poppler.freedesktop.org/) .
 - Pull poppler source patches from this repo.
 ``` bash
 wget https://poppler.freedesktop.org/poppler-${pkgver}.tar.xz
@@ -78,4 +78,4 @@ Nowadays, [Zhou's patch](https://github.com/zhou13/poppler-subpixel) won't work 
 1. subpixel rendering wrapper for glib is so incomplete that any poppler-glib based frontend (e.g. evince) has to be patched to enable subpixel rendering.
 2. Cairo compositing operator used for Type 3 fonts is controlled inexplicitly by switching off subpixel antialias.
 
-Recently, based on the work of Paul and Zhou, I have rewritten the subpixel patch for the latest Poppler-0.76 to provide subpixel functionality to PDF viewers without patching their own source code.
+Recently, based on the work of Paul and Zhou, I have rewritten the subpixel patch to provide subpixel functionality to PDF viewers without patching their own source code.

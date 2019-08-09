@@ -37,7 +37,7 @@ index d9addc79..ff0269a5 100644
              this, &PdfViewer::slotRenderBackend);
  
 diff --git a/qt5/src/CMakeLists.txt b/qt5/src/CMakeLists.txt
-index 340a3e43..2e7e5521 100644
+index e3b60fcb..3659d467 100644
 --- a/qt5/src/CMakeLists.txt
 +++ b/qt5/src/CMakeLists.txt
 @@ -7,6 +7,10 @@ include_directories(
@@ -63,7 +63,7 @@ index 340a3e43..2e7e5521 100644
 +  )
 +endif(HAVE_CAIRO)
  add_library(poppler-qt5 ${poppler_qt5_SRCS})
- set_target_properties(poppler-qt5 PROPERTIES VERSION 1.19.0 SOVERSION 1)
+ set_target_properties(poppler-qt5 PROPERTIES VERSION 1.20.0 SOVERSION 1)
  if(MINGW AND BUILD_SHARED_LIBS)
 @@ -45,6 +56,9 @@ if(MINGW AND BUILD_SHARED_LIBS)
      set_target_properties(poppler-qt5 PROPERTIES SUFFIX "-${POPPLER_QT5_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
@@ -90,7 +90,7 @@ index 81db4eaf..635e44f9 100644
      }
  
 diff --git a/qt5/src/poppler-page.cc b/qt5/src/poppler-page.cc
-index 3e750620..8bd8937c 100644
+index bf1f8889..a3684b06 100644
 --- a/qt5/src/poppler-page.cc
 +++ b/qt5/src/poppler-page.cc
 @@ -48,6 +48,7 @@
@@ -111,7 +111,7 @@ index 3e750620..8bd8937c 100644
  
  #include "poppler-private.h"
  #include "poppler-page-transition-private.h"
-@@ -622,6 +626,46 @@ QImage Page::renderToImage(double xres, double yres, int x, int y, int w, int h,
+@@ -622,6 +626,46 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
        img = tmpimg;
        break;
      }
@@ -145,7 +145,7 @@ index 3e750620..8bd8937c 100644
 +      output_dev->setCairo(cairo);
 +      m_page->parentDoc->doc->displayPageSlice(
 +        output_dev, m_page->index + 1, xres, yres, rotation, false, true,
-+        false, x, y, w, h);
++        false, xPos, yPos, w, h);
 +
 +      // Clean up
 +      output_dev->setCairo(NULL);
@@ -168,10 +168,10 @@ index 3e750620..8bd8937c 100644
    return false;
  }
 diff --git a/qt5/src/poppler-private.cc b/qt5/src/poppler-private.cc
-index e847ed5e..4b58f750 100644
+index a3fbec36..05c6bc96 100644
 --- a/qt5/src/poppler-private.cc
 +++ b/qt5/src/poppler-private.cc
-@@ -253,7 +253,7 @@ namespace Debug {
+@@ -255,7 +255,7 @@ namespace Debug {
      
      void DocumentData::init()
      {
@@ -181,7 +181,7 @@ index e847ed5e..4b58f750 100644
          m_hints = 0;
          m_optContentModel = nullptr;
 diff --git a/qt5/src/poppler-qt5.h b/qt5/src/poppler-qt5.h
-index c03fec15..b59a93f1 100644
+index ebbc456a..37adf71a 100644
 --- a/qt5/src/poppler-qt5.h
 +++ b/qt5/src/poppler-qt5.h
 @@ -1144,7 +1144,8 @@ delete it;

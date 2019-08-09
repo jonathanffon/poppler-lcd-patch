@@ -9,7 +9,7 @@ git diff --stat
  2 files changed, 19 insertions(+), 0 deletions(-)
 
 diff --git a/glib/poppler-page.cc b/glib/poppler-page.cc
-index dc82afc4..f79530e7 100644
+index 8b5b4da0..d28084fb 100644
 --- a/glib/poppler-page.cc
 +++ b/glib/poppler-page.cc
 @@ -346,6 +346,14 @@ _poppler_page_render (PopplerPage      *page,
@@ -27,7 +27,7 @@ index dc82afc4..f79530e7 100644
    /* NOTE: instead of passing -1 we should/could use cairo_clip_extents()
     * to get a bounding box */
    cairo_save (cairo);
-@@ -2413,3 +2421,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
+@@ -2447,3 +2455,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
  
    return g_list_reverse(attributes);
  }

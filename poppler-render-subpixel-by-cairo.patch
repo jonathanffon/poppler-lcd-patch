@@ -44,7 +44,7 @@ index bf6bd88d..d9e42304 100644
    if (cairo_font_face_set_user_data (l->font_face,
  				     &_ft_cairo_key,
 diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
-index d2769a22..6ed93052 100644
+index 68927636..1605f4d3 100644
 --- a/poppler/CairoOutputDev.cc
 +++ b/poppler/CairoOutputDev.cc
 @@ -1431,6 +1431,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
@@ -77,10 +77,10 @@ index d2769a22..6ed93052 100644
  finish:
    gfree (glyphs);
 diff --git a/poppler/Gfx.cc b/poppler/Gfx.cc
-index 8bf141e9..63a3cb4d 100644
+index a9b93b61..1d94913b 100644
 --- a/poppler/Gfx.cc
 +++ b/poppler/Gfx.cc
-@@ -4606,6 +4606,37 @@ void Gfx::doImage(Object *ref, Stream *str, bool inlineImg) {
+@@ -4610,6 +4610,37 @@ void Gfx::doImage(Object *ref, Stream *str, bool inlineImg) {
    error(errSyntaxError, getPos(), "Bad image parameters");
  }
  
