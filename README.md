@@ -73,7 +73,7 @@ About 9 years ago, Paul requested a Cairo backend for Poppler's Qt4 wrapper, to 
 
 Two years ago, Yichao Zhou proposed a patch of subpixel rendering support for Poppler-0.43 ([Issue 23](https://gitlab.freedesktop.org/poppler/poppler/issues/23)). It was reviewed by Adrian Johnson but he didn't seem to be willing to accept it.
 
-Nowadays, [Zhou's patch](https://github.com/zhou13/poppler-subpixel) won't work for Poppler>0.43 and [Paul's patch](https://github.com/giddie/poppler-cairo-backend) is still under maintainance for the latest poppler version. Paul's latest update is for Poppler-0.74 on 18 Feb, 2019, but the patch has the following disadvantages:
+Nowadays, [Zhou's patch](https://github.com/zhou13/poppler-subpixel) won't work for Poppler>0.43 and [Paul's patch](https://github.com/giddie/poppler-cairo-backend) is still under maintainance for the latest poppler version. Paul's patch has the following disadvantages:
 
 1. subpixel rendering wrapper for glib is so incomplete that any poppler-glib based frontend (e.g. evince) has to be patched to enable subpixel rendering.
 2. Cairo compositing operator used for Type 3 fonts is controlled inexplicitly by switching off subpixel antialias.
