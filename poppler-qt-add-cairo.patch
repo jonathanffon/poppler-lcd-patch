@@ -22,16 +22,16 @@ index d9addc79..ff0269a5 100644
      act = settingsRenderMenu->addAction(tr("Splash"));
      act->setCheckable(true);
 -    act->setChecked(true);
-     act->setData(qVariantFromValue(0));
+     act->setData(QVariant::fromValue(0));
      m_settingsRenderBackendGrp->addAction(act);
      act = settingsRenderMenu->addAction(tr("Arthur"));
      act->setCheckable(true);
-     act->setData(qVariantFromValue(1));
+     act->setData(QVariant::fromValue(1));
      m_settingsRenderBackendGrp->addAction(act);
 +    act = settingsRenderMenu->addAction(tr("Cairo"));
 +    act->setCheckable(true);
 +    act->setChecked(true);
-+    act->setData(qVariantFromValue(2));
++    act->setData(QVariant::fromValue(2));
 +    m_settingsRenderBackendGrp->addAction(act);
      connect(m_settingsRenderBackendGrp, &QActionGroup::triggered,
              this, &PdfViewer::slotRenderBackend);
@@ -51,7 +51,7 @@ index e3b60fcb..3659d467 100644
  
  set(CMAKE_C_VISIBILITY_PRESET hidden)
  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-@@ -38,6 +42,13 @@ set(poppler_qt5_SRCS
+@@ -39,6 +43,13 @@ set(poppler_qt5_SRCS
    ArthurOutputDev.cc
    poppler-version.cpp
  )
@@ -63,9 +63,9 @@ index e3b60fcb..3659d467 100644
 +  )
 +endif(HAVE_CAIRO)
  add_library(poppler-qt5 ${poppler_qt5_SRCS})
- set_target_properties(poppler-qt5 PROPERTIES VERSION 1.20.0 SOVERSION 1)
+ set_target_properties(poppler-qt5 PROPERTIES VERSION 1.22.0 SOVERSION 1)
  if(MINGW AND BUILD_SHARED_LIBS)
-@@ -45,6 +56,9 @@ if(MINGW AND BUILD_SHARED_LIBS)
+@@ -46,6 +57,9 @@ if(MINGW AND BUILD_SHARED_LIBS)
      set_target_properties(poppler-qt5 PROPERTIES SUFFIX "-${POPPLER_QT5_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  endif()
  target_link_libraries(poppler-qt5 poppler ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Xml_LIBRARIES} ${FREETYPE_LIBRARIES})
@@ -79,7 +79,7 @@ diff --git a/qt5/src/poppler-document.cc b/qt5/src/poppler-document.cc
 index 81db4eaf..635e44f9 100644
 --- a/qt5/src/poppler-document.cc
 +++ b/qt5/src/poppler-document.cc
-@@ -695,6 +695,9 @@ namespace Poppler {
+@@ -707,6 +707,9 @@ namespace Poppler {
          ret << Document::SplashBackend;
  #endif
          ret << Document::ArthurBackend;
@@ -111,7 +111,7 @@ index bf1f8889..a3684b06 100644
  
  #include "poppler-private.h"
  #include "poppler-page-transition-private.h"
-@@ -622,6 +626,46 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
+@@ -609,6 +613,46 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
        img = tmpimg;
        break;
      }
@@ -158,7 +158,7 @@ index bf1f8889..a3684b06 100644
    }
  
    if (shouldAbortRenderCallback && shouldAbortRenderCallback(payload))
-@@ -644,6 +688,8 @@ bool Page::renderToPainter(QPainter* painter, double xres, double yres, int x, i
+@@ -631,6 +675,8 @@ bool Page::renderToPainter(QPainter* painter, double xres, double yres, int x, i
          QImageDumpingArthurOutputDev arthur_output(painter, nullptr);
          return renderToArthur(&arthur_output, painter, m_page, xres, yres, x, y, w, h, rotate, flags);
      }
@@ -171,7 +171,7 @@ diff --git a/qt5/src/poppler-private.cc b/qt5/src/poppler-private.cc
 index a3fbec36..05c6bc96 100644
 --- a/qt5/src/poppler-private.cc
 +++ b/qt5/src/poppler-private.cc
-@@ -255,7 +255,7 @@ namespace Debug {
+@@ -239,7 +239,7 @@ namespace Debug {
      
      void DocumentData::init()
      {
@@ -184,7 +184,7 @@ diff --git a/qt5/src/poppler-qt5.h b/qt5/src/poppler-qt5.h
 index ebbc456a..37adf71a 100644
 --- a/qt5/src/poppler-qt5.h
 +++ b/qt5/src/poppler-qt5.h
-@@ -1144,7 +1144,8 @@ delete it;
+@@ -1152,7 +1152,8 @@ delete it;
  	*/
  	enum RenderBackend {
  	    SplashBackend,   ///< Splash backend

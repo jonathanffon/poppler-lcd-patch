@@ -47,7 +47,7 @@ diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
 index 68927636..1605f4d3 100644
 --- a/poppler/CairoOutputDev.cc
 +++ b/poppler/CairoOutputDev.cc
-@@ -1431,6 +1431,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
+@@ -1428,6 +1428,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y,
  void CairoOutputDev::endString(GfxState *state)
  {
    int render;
@@ -55,7 +55,7 @@ index 68927636..1605f4d3 100644
  
    if (!currentFont)
      return;
-@@ -1448,6 +1449,12 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1445,6 +1446,12 @@ void CairoOutputDev::endString(GfxState *state)
      goto finish;
    }
  
@@ -68,7 +68,7 @@ index 68927636..1605f4d3 100644
    if (!(render & 1)) {
      LOG (printf ("fill string\n"));
      cairo_set_source (cairo, fill_pattern);
-@@ -1496,6 +1503,7 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1493,6 +1500,7 @@ void CairoOutputDev::endString(GfxState *state)
        cairo_new_path (cairo_shape);
      }
    }
@@ -80,7 +80,7 @@ diff --git a/poppler/Gfx.cc b/poppler/Gfx.cc
 index a9b93b61..1d94913b 100644
 --- a/poppler/Gfx.cc
 +++ b/poppler/Gfx.cc
-@@ -4610,6 +4610,37 @@ void Gfx::doImage(Object *ref, Stream *str, bool inlineImg) {
+@@ -4595,6 +4595,37 @@ void Gfx::doImage(Object *ref, Stream *str, bool inlineImg) {
    error(errSyntaxError, getPos(), "Bad image parameters");
  }
  
@@ -122,7 +122,7 @@ diff --git a/poppler/Gfx.h b/poppler/Gfx.h
 index 19462e8d..b0bbd11c 100644
 --- a/poppler/Gfx.h
 +++ b/poppler/Gfx.h
-@@ -192,6 +192,9 @@ public:
+@@ -193,6 +193,9 @@ public:
    // Get the current graphics state object.
    GfxState *getState() { return state; }
  
@@ -153,8 +153,8 @@ index d137ec4b..5131a69a 100644
 +}
 +
  void Page::replaceXRef(XRef *xrefA) {
-   Object obj1;
    Dict *pageDict = pageObj.getDict()->copy(xrefA);
+   xref = xrefA;
 diff --git a/poppler/Page.h b/poppler/Page.h
 index 01f056f9..81b1d01c 100644
 --- a/poppler/Page.h

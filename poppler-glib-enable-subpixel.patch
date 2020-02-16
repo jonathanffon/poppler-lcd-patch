@@ -27,7 +27,7 @@ index 8b5b4da0..d28084fb 100644
    /* NOTE: instead of passing -1 we should/could use cairo_clip_extents()
     * to get a bounding box */
    cairo_save (cairo);
-@@ -2447,3 +2455,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
+@@ -2438,3 +2446,13 @@ poppler_page_get_text_attributes_for_area (PopplerPage      *page,
  
    return g_list_reverse(attributes);
  }
