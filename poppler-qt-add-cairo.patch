@@ -7,7 +7,7 @@ git diff --stat
  qt5/demos/viewer.cpp        |  4 ++++
  qt5/src/CMakeLists.txt      | 14 ++++++++++++++
  qt5/src/poppler-document.cc |  3 +++
- qt5/src/poppler-page.cc     | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ qt5/src/poppler-page.cc     | 43 +++++++++++++++++++++++++++++++++++++++++++
  qt5/src/poppler-private.cc  |  2 +-
  qt5/src/poppler-qt5.h       |  1 +
  qt5/tests/CMakeLists.txt    |  4 ++++
@@ -18,7 +18,7 @@ git diff --stat
  qt6/src/poppler-private.cc  |  2 +-
  qt6/src/poppler-qt6.h       |  3 ++-
  qt6/tests/CMakeLists.txt    |  4 ++++
- 14 files changed, 143 insertions(+), 3 deletions(-)
+ 14 files changed, 142 insertions(+), 3 deletions(-)
 
 diff --git a/qt5/demos/viewer.cpp b/qt5/demos/viewer.cpp
 index 0b1a8f0e..b4953911 100644
@@ -92,18 +92,18 @@ diff --git a/qt5/src/poppler-page.cc b/qt5/src/poppler-page.cc
 index 31c60698..e3467c69 100644
 --- a/qt5/src/poppler-page.cc
 +++ b/qt5/src/poppler-page.cc
-@@ -49,6 +49,7 @@
+@@ -50,6 +50,7 @@
  #include <QtGui/QImage>
  #include <QtGui/QPainter>
  
 +#include <math.h>
  #include <config.h>
+ #include <cfloat>
  #include <poppler-config.h>
- #include <PDFDoc.h>
 @@ -64,6 +65,9 @@
- #    include <SplashOutputDev.h>
- #    include <splash/SplashBitmap.h>
- #endif
+ #include <Rendition.h>
+ #include <SplashOutputDev.h>
+ #include <splash/SplashBitmap.h>
 +#if defined(HAVE_CAIRO)
 +#    include <CairoOutputDev.h>
 +#endif
@@ -285,9 +285,9 @@ index 248b48d5..e17777b4 100644
  #include <poppler-config.h>
  #include <PDFDoc.h>
 @@ -64,6 +65,9 @@
- #    include <SplashOutputDev.h>
- #    include <splash/SplashBitmap.h>
- #endif
+ #include <Rendition.h>
+ #include <SplashOutputDev.h>
+ #include <splash/SplashBitmap.h>
 +#if defined(HAVE_CAIRO)
 +#    include <CairoOutputDev.h>
 +#endif
