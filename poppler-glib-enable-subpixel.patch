@@ -4,25 +4,29 @@ Subject:
   Thanks to Yichao Zhou for his subpixel patch of previous poppler-0.43.
 ---
 git diff --stat
- glib/poppler-page.cc        | 17 +++++++++++++++++
+ glib/poppler-page.cc        | 21 +++++++++++++++++++++
  glib/poppler-page.h         |  1 +
- 2 files changed, 18 insertions(+)
+ 2 files changed, 22 insertions(+)
 
 diff --git a/glib/poppler-page.cc b/glib/poppler-page.cc
 index 7e21c717..7372d3a0 100644
 --- a/glib/poppler-page.cc
 +++ b/glib/poppler-page.cc
-@@ -319,6 +319,14 @@ static void _poppler_page_render(PopplerPage *page, cairo_t *cairo, bool printin
+@@ -319,6 +319,18 @@ static void _poppler_page_render(PopplerPage *page, cairo_t *cairo, bool printin
          page->text = new TextPage(false);
          output_dev->setTextPage(page->text);
      }
 +    bool subpixel_suited = poppler_page_suit_subpixel_rendering (page);
 +    if (!printing && subpixel_suited) {
-+        output_dev->setAntialias(CAIRO_ANTIALIAS_SUBPIXEL);
++        cairo_set_antialias(cairo, CAIRO_ANTIALIAS_SUBPIXEL);
++        cairo_font_options_t *font_options = cairo_font_options_create();
++        cairo_font_options_set_antialias(font_options, CAIRO_ANTIALIAS_SUBPIXEL);
++        cairo_set_font_options(cairo, font_options);
++        cairo_font_options_destroy(font_options);
 +        cairo_set_source_rgb (cairo, 1., 1., 1.);
 +        cairo_paint (cairo);
 +    } else {
-+        output_dev->setAntialias(CAIRO_ANTIALIAS_DEFAULT);
++        cairo_set_antialias(cairo, CAIRO_ANTIALIAS_DEFAULT);
 +    }
      /* NOTE: instead of passing -1 we should/could use cairo_clip_extents()
       * to get a bounding box */

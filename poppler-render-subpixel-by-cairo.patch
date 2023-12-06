@@ -4,13 +4,13 @@ Subject:
   Thanks to Yichao Zhou for his subpixel patch of previous poppler-0.43.
 ---
 git diff --stat
- poppler/CairoFontEngine.cc |  6 +++---
+ poppler/CairoFontEngine.cc |  4 ++--
  poppler/CairoOutputDev.cc  |  7 +++++++
  poppler/Gfx.cc             | 30 ++++++++++++++++++++++++++++++
  poppler/Gfx.h              |  3 +++
  poppler/Page.cc            | 12 ++++++++++++
  poppler/Page.h             |  3 +++
- 6 files changed, 58 insertions(+), 3 deletions(-)
+ 6 files changed, 57 insertions(+), 2 deletions(-)
 
 diff --git a/poppler/CairoFontEngine.cc b/poppler/CairoFontEngine.cc
 index a65b5fc8..55475d31 100755
@@ -25,24 +25,15 @@ index a65b5fc8..55475d31 100755
                  cairo_font_options_set_hint_metrics(options, CAIRO_HINT_METRICS_OFF);
                  cairo_scaled_font_t *scaled_font = cairo_scaled_font_create(cairo_font_face, &m, &m, options);
  
-@@ -167,7 +167,7 @@ static bool _ft_new_face_uncached(FT_Library lib, const char *filename, char *fo
-             return false;
+@@ -186,7 +186,7 @@ 
+         }
      }
  
--    font_face = cairo_ft_font_face_create_for_ft_face(face, FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP);
-+    font_face = cairo_ft_font_face_create_for_ft_face(face, FT_LOAD_TARGET_LIGHT | FT_LOAD_NO_BITMAP);
-     if (cairo_font_face_set_user_data(font_face, &_ft_cairo_key, face, _ft_done_face_uncached)) {
-         _ft_done_face_uncached(face);
-         cairo_font_face_destroy(font_face);
-@@ -315,7 +315,7 @@ static bool _ft_new_face(FT_Library lib, const char *filename, char *font_data,
-     struct _ft_face_data *l = (struct _ft_face_data *)gmallocn(1, sizeof(struct _ft_face_data));
-     *l = tmpl;
- 
--    l->font_face = cairo_ft_font_face_create_for_ft_face(tmpl.face, FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP);
-+    l->font_face = cairo_ft_font_face_create_for_ft_face(tmpl.face, FT_LOAD_TARGET_LIGHT | FT_LOAD_NO_BITMAP);
-     if (cairo_font_face_set_user_data(l->font_face, &_ft_cairo_key, l, _ft_done_face)) {
-         cairo_font_face_destroy(l->font_face);
-         _ft_done_face(l);
+-    font_face.cairo_font_face = cairo_ft_font_face_create_for_ft_face(resource->face, FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP);
++    font_face.cairo_font_face = cairo_ft_font_face_create_for_ft_face(resource->face, FT_LOAD_TARGET_LIGHT | FT_LOAD_NO_BITMAP);
+     if (cairo_font_face_set_user_data(font_face.cairo_font_face, &ft_cairo_key, resource, _ft_done_face)) {
+         cairo_font_face_destroy(font_face.cairo_font_face);
+         _ft_done_face(resource);            return false;
 diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
 index aa68c6cd..3d273c98 100644
 --- a/poppler/CairoOutputDev.cc
@@ -60,7 +51,7 @@ index aa68c6cd..3d273c98 100644
      }
  
 +    // CAIRO_OPERATOR_DEST_OVER for subpixel purpose doesnot fit type3 font
-+    if (state->getFont()->getType() == fontType3 && this->antialias == CAIRO_ANTIALIAS_SUBPIXEL) {
++    if (state->getFont()->getType() == fontType3 && cairo_get_antialias(this->cairo) == CAIRO_ANTIALIAS_SUBPIXEL) {
 +        cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
 +    }
 +
