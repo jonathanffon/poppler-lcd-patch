@@ -7,18 +7,18 @@ git diff --stat
  qt5/demos/viewer.cpp        |  4 ++++
  qt5/src/CMakeLists.txt      | 14 ++++++++++++++
  qt5/src/poppler-document.cc |  3 +++
- qt5/src/poppler-page.cc     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ qt5/src/poppler-page.cc     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
  qt5/src/poppler-private.cc  |  2 +-
  qt5/src/poppler-qt5.h       |  1 +
  qt5/tests/CMakeLists.txt    |  4 ++++
  qt6/demos/viewer.cpp        |  4 ++++
  qt6/src/CMakeLists.txt      | 14 ++++++++++++++
  qt6/src/poppler-document.cc |  3 +++
- qt6/src/poppler-page.cc     | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ qt6/src/poppler-page.cc     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
  qt6/src/poppler-private.cc  |  2 +-
  qt6/src/poppler-qt6.h       |  3 ++-
  qt6/tests/CMakeLists.txt    |  4 ++++
- 14 files changed, 150 insertions(+), 3 deletions(-)
+ 14 files changed, 148 insertions(+), 3 deletions(-)
 
 diff --git a/qt5/demos/viewer.cpp b/qt5/demos/viewer.cpp
 index 0b1a8f0e..b4953911 100644
@@ -110,7 +110,7 @@ index 31c60698..e3467c69 100644
  
  #include "poppler-private.h"
  #include "poppler-page-transition-private.h"
-@@ -564,6 +568,48 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
+@@ -564,6 +568,47 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
          img = tmpimg;
          break;
      }
@@ -138,7 +138,6 @@ index 31c60698..e3467c69 100644
 +            img.bits(), CAIRO_FORMAT_ARGB32, img.width(), img.height(), img.bytesPerLine());
 +        cairo_t *cairo = cairo_create(surface);
 +        if (subpixel_suited) {
-+            cairo_set_antialias(cairo, CAIRO_ANTIALIAS_SUBPIXEL);
 +            cairo_font_options_t *font_options = cairo_font_options_create();
 +            cairo_font_options_set_antialias(font_options, CAIRO_ANTIALIAS_SUBPIXEL);
 +            cairo_set_font_options(cairo, font_options);
@@ -298,7 +297,7 @@ index 248b48d5..e17777b4 100644
  
  #include "poppler-private.h"
  #include "poppler-page-transition-private.h"
-@@ -564,6 +568,48 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
+@@ -564,6 +568,47 @@ QImage Page::renderToImage(double xres, double yres, int xPos, int yPos, int w,
          img = tmpimg;
          break;
      }
@@ -326,7 +325,6 @@ index 248b48d5..e17777b4 100644
 +            img.bits(), CAIRO_FORMAT_ARGB32, img.width(), img.height(), img.bytesPerLine());
 +        cairo_t *cairo = cairo_create(surface);
 +        if (subpixel_suited) {
-+            cairo_set_antialias(cairo, CAIRO_ANTIALIAS_SUBPIXEL);
 +            cairo_font_options_t *font_options = cairo_font_options_create();
 +            cairo_font_options_set_antialias(font_options, CAIRO_ANTIALIAS_SUBPIXEL);
 +            cairo_set_font_options(cairo, font_options);

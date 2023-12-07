@@ -5,19 +5,48 @@ PDF rendering library with subpixel engine.
 The goal is to increase the apparent resolution of PDF content on LCD laptop.
 
 ## Features
-- Embed subpixel rendering into Cairo font engine of `poppler` and `poppler-glib`. Add Cairo backend to `poppler-qt5`.
-- Grant subpixel smoothing ability to poppler-based PDF viewers, such as Evince, Okular and TeXstudio, without contaminating their source code.
 
-## Install from Arch Linux
+- Embed subpixel rendering into Cairo font engine of `poppler` and `poppler-glib`.
+- Add Cairo backend to `poppler-qt5` and `poppler-qt6`.
+- Grant subpixel smoothing to poppler-based PDF viewers (Evince, Okular, TeXstudio...)
 
-Suppose you have `yay` as Pacman wrapper and *AUR* helper.
+## Build & Install
 
-``` bash
-yay -S poppler-lcd poppler-glib-lcd poppler-qt5-lcd
+### Prerequisites
+
+Suppose you are using Arch Linux. Those packages are needed to compile poppler:
+'libjpeg' 'gcc-libs' 'cairo' 'fontconfig' 'openjpeg2' 'gtk3' 'pkgconfig' 'lcms2'
+'gobject-introspection' 'icu' 'qt5-base' 'qt6-base' 'git' 'nss' 'gpgme' 'gtk-doc'
+'curl' 'cmake' 'python' 'boost'
+
+```bash
+pacman -S libjpeg-turbo gcc-libs cairo fontconfig openjpeg2 gtk3 pkgconf lcms2 gobject-introspection icu qt5-base qt6-base git nss gpgme gtk-doc curl cmake python boost
 ```
-If you have a different version of `poppler` installed, you may encounter dependency issues. Try `yay -Sd ${pkgname}` to ignore them.
+
+### Build from source
+
+A script was provided to build necessary shared libraries. They will be copied to `~/.config/poppler-lcd` folder.
+
+```bash
+bash gen.sh
+```
+
+### Install
+
+Sudoer's password is required. Desktop entries (\*.desktop) will be modified to preload patched libraries.
+
+```bash
+bash gen.sh install
+```
+
+If you don't want to modify system desktop entries directly, copy them to `~/.local/share/application` and modify them as you wish.
+
+> Take okular for example. Find the line `Exec=okular %U` and replace it with:
+> `Exec=LD_PRELOAD=${pathto}/libpoppler-qt5.so:${pathto}/libpoppler.so okular %U`
+> Use your customized desktop entry instead.
 
 ## Supported Frontends
+
 - [x] Document Viewer (Evince)
 
 - [x] Okular
@@ -26,41 +55,8 @@ If you have a different version of `poppler` installed, you may encounter depend
 
   ...
 
-  > TeXstudio sets splash as its default rendering backend. In order to use Cairo subpixel backend without patching TeXstudio, we can nullify its backend setting by fabricating and injecting a preload library as follows:
-  >
-  > ``` bash
-  > D="#define _ setRenderBackend(RenderBackend)\n"
-  > N="namespace Poppler{struct Document{enum RenderBackend{};void _;};void Document::_{}}"
-  > F="$HOME/.config/texstudio/injct.so"
-  > echo $D$N|gcc -xc++ -shared -fPIC -fno-inline -o $F -
-  > sudo sed -i "s#Exec=tex#Exec=LD_PRELOAD=$F tex#" /usr/share/applications/texstudio.desktop
-  > ```
-  > TeXstudio started by the modified ".desktop" file will be subpixel enabled.
-  > 
-
-## Build from source
-- Download desired poppler version (e.g. pkgver=0.79.0) from [freedesktop website](https://poppler.freedesktop.org/) .
-- Pull poppler source patches from this repo.
-``` bash
-wget https://poppler.freedesktop.org/poppler-${pkgver}.tar.xz
-git clone https://github.com/jonathanffon/poppler-lcd-patch.git
-tar -xJf poppler-${pkgver}.tar.xz
-mkdir -p build
-cd poppler-${pkgver}
-for patch in `ls ../poppler-lcd-patch/*.patch`; do
-  patch -p1<$patch
-done
-cd ../build
-cmake ../poppler-${pkgver} \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-  -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-  -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
-  -DENABLE_GTK_DOC=ON
-make
-```
-
 ## Screenshot
+
 ![before and after subpixel rendering](https://github.com/jonathanffon/poppler-lcd-patch/blob/master/img/compare.png)
 
 ## History
@@ -78,4 +74,8 @@ Nowadays, [Zhou's patch](https://github.com/zhou13/poppler-subpixel) won't work 
 1. subpixel rendering wrapper for glib is so incomplete that any poppler-glib based frontend (e.g. evince) has to be patched to enable subpixel rendering.
 2. Cairo compositing operator used for Type 3 fonts is controlled inexplicitly by switching off subpixel antialias.
 
-Recently, based on the work of Paul and Zhou, I have rewritten the subpixel patch to provide subpixel functionality to PDF viewers without patching their own source code.
+Based on the work of Paul and Zhou, I have rewritten the subpixel patch to provide subpixel functionality to PDF viewers without patching their own source code.
+
+At one time, I tried to maintain a package in Arch User Repository(AUR) that provided a subpixel-hinting version of poppler. However, it might lead to broken package dependencies.
+
+Finally, DLL injection was choosed to introduce subpixel rendering for PDF viewers. The trick can be used on various Linux Distros and won't affect system files except for the `*.desktop` launcher.

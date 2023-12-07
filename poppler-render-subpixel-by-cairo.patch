@@ -5,12 +5,12 @@ Subject:
 ---
 git diff --stat
  poppler/CairoFontEngine.cc |  4 ++--
- poppler/CairoOutputDev.cc  |  7 +++++++
+ poppler/CairoOutputDev.cc  | 13 ++++++++++++-
  poppler/Gfx.cc             | 30 ++++++++++++++++++++++++++++++
  poppler/Gfx.h              |  3 +++
  poppler/Page.cc            | 12 ++++++++++++
  poppler/Page.h             |  3 +++
- 6 files changed, 57 insertions(+), 2 deletions(-)
+ 6 files changed, 62 insertions(+), 3 deletions(-)
 
 diff --git a/poppler/CairoFontEngine.cc b/poppler/CairoFontEngine.cc
 index a65b5fc8..55475d31 100755
@@ -38,6 +38,15 @@ diff --git a/poppler/CairoOutputDev.cc b/poppler/CairoOutputDev.cc
 index aa68c6cd..3d273c98 100644
 --- a/poppler/CairoOutputDev.cc
 +++ b/poppler/CairoOutputDev.cc
+@@ -158,7 +158,7 @@
+ #else
+     prescaleImages = true;
+ #endif
+-    printing = true;
++    printing = false;
+     use_show_text_glyphs = false;
+     inUncoloredPattern = false;
+     t3_render_state = Type3RenderNone;
 @@ -1412,6 +1412,7 @@ void CairoOutputDev::drawChar(GfxState *state, double x, double y, double dx, do
  void CairoOutputDev::endString(GfxState *state)
  {
@@ -46,13 +55,17 @@ index aa68c6cd..3d273c98 100644
  
      if (!currentFont)
          return;
-@@ -1429,6 +1430,11 @@ void CairoOutputDev::endString(GfxState *state)
+@@ -1429,6 +1430,15 @@ void CairoOutputDev::endString(GfxState *state)
          goto finish;
      }
  
 +    // CAIRO_OPERATOR_DEST_OVER for subpixel purpose doesnot fit type3 font
-+    if (state->getFont()->getType() == fontType3 && cairo_get_antialias(this->cairo) == CAIRO_ANTIALIAS_SUBPIXEL) {
-+        cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++    if (state->getFont()->getType() == fontType3) {
++        cairo_font_options_t *font_options = cairo_font_options_create();
++        cairo_get_font_options(this->cairo, font_options);
++        if (cairo_font_options_get_antialias(font_options) == CAIRO_ANTIALIAS_SUBPIXEL) {
++            cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++        }
 +    }
 +
      if (!(render & 1)) {

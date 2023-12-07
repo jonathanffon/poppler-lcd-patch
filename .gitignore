@@ -1,2 +1,4 @@
 # Folders
-/poppler-lcd/
+poppler-*.*.?/
+# Files
+*.xz
