@@ -1,4 +1,5 @@
-# poppler-lcd-patch   
+# poppler-lcd-patch
+
 ![v23.12.0](https://badgen.net/badge/poppler-lcd/v23.12.0/green)
 
 PDF rendering library with subpixel engine.
@@ -9,9 +10,10 @@ The goal is to increase the apparent resolution of PDF content on LCD laptop.
 
 - Embed subpixel rendering into Cairo font engine of `poppler` and `poppler-glib`.
 - Add Cairo backend to `poppler-qt5` and `poppler-qt6`.
-- Grant subpixel smoothing to poppler-based PDF viewers (Evince, Okular, TeXstudio...)
+- Grant subpixel smoothing to poppler-based PDF viewers (Evince, Okular, TeXstudio...).
+- Previously installed poppler libraries remain untouched (Only \*.desktop file will be modified).
 
-## Build & Install
+## Build & Inject
 
 ### Prerequisites
 
@@ -32,12 +34,12 @@ A script was provided to build necessary shared libraries. They will be copied t
 bash gen.sh
 ```
 
-### Install
+### Inject
 
 Sudoer's password is required. Desktop entries (\*.desktop) will be modified to preload patched libraries.
 
 ```bash
-bash gen.sh install
+bash gen.sh inject
 ```
 
 If you don't want to modify system desktop entries directly, copy them to `~/.local/share/application` and modify them as you wish.
@@ -45,6 +47,14 @@ If you don't want to modify system desktop entries directly, copy them to `~/.lo
 > Take okular for example. Find the line `Exec=okular %U` and replace it with:
 > `Exec=LD_PRELOAD=${pathto}/libpoppler-qt5.so:${pathto}/libpoppler.so okular %U`
 > Use your customized desktop entry instead.
+
+### Restore
+
+If you don't want this subpixel rendering functionality any more and prefer using the original poppler libraries, recover desktop entries by running:
+
+```bash
+bash gen.sh unload
+```
 
 ## Supported Frontends
 
