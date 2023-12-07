@@ -1,4 +1,5 @@
-# poppler-lcd-patch
+# poppler-lcd-patch   
+![v23.12.0](https://badgen.net/badge/poppler-lcd/v23.12.0/green)
 
 PDF rendering library with subpixel engine.
 
