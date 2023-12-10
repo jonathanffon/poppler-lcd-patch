@@ -47,7 +47,8 @@ Q6=$outd/libpoppler-qt6.so
 
 # modify desktop entries. usage: `bash gen.sh [inject|unload]`
 #   inject: add preload libraries; unload: use original libraries
-apps=("texstudio tex $T:$Q6" "org.gnome.Evince evi $G" "org.kde.okular oku $Q5")
+apps=("texstudio tex $T:$Q6" "org.gnome.Evince evi $G"
+	"org.kde.okular oku $Q5" "org.pwmt.zathura zat $G")
 if [ "$1" == "inject" ]; then
 	for app in "${apps[@]}"; do
 		et=($app) && nm=${et[@]:0:1} && tag=${et[@]:1:1} && lib=${et[@]:2:1}
