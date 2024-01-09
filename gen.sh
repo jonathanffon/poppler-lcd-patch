@@ -1,5 +1,5 @@
 #!/bin/bash
-pkgver=23.12.0
+pkgver=24.01.0
 root=$PWD/poppler-${pkgver}
 outd=~/.config/poppler-lcd
 entryd=/usr/share/applications
