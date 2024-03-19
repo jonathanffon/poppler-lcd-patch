@@ -1,5 +1,5 @@
 #!/bin/bash
-pkgver=24.01.0
+pkgver=24.03.0
 root=$PWD/poppler-${pkgver}
 outd=~/.config/poppler-lcd
 entryd=/usr/share/applications
@@ -27,7 +27,7 @@ if [ ! -f $root/build/libpoppler.so -a -z "$1" ]; then
 		-DCMAKE_INSTALL_PREFIX:PATH=/usr \
 		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
 		-DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
-		-DENABLE_GTK_DOC=ON
+		-DENABLE_GTK_DOC=OFF
 	make
 	echo "output patched libraries to user directory"
 	mkdir -p $outd
@@ -48,7 +48,7 @@ Q6=$outd/libpoppler-qt6.so
 # modify desktop entries. usage: `bash gen.sh [inject|unload]`
 #   inject: add preload libraries; unload: use original libraries
 apps=("texstudio tex $T:$Q6" "org.gnome.Evince evi $G"
-	"org.kde.okular oku $Q5" "org.pwmt.zathura zat $G")
+	"org.kde.okular oku $Q6" "org.pwmt.zathura zat $G")
 if [ "$1" == "inject" ]; then
 	for app in "${apps[@]}"; do
 		et=($app) && nm=${et[@]:0:1} && tag=${et[@]:1:1} && lib=${et[@]:2:1}

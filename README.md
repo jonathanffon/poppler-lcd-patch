@@ -1,6 +1,6 @@
 # poppler-lcd-patch
 
-![v24.01.0](https://badgen.net/badge/poppler-lcd/v24.01.0/green)
+![v24.03.0](https://badgen.net/badge/poppler-lcd/v24.03.0/green)
 
 PDF rendering library with subpixel engine.
 
@@ -45,7 +45,7 @@ bash gen.sh inject
 If you don't want to modify system desktop entries directly, copy them to `~/.local/share/application` and modify them as you wish.
 
 > Take okular for example. Find the line `Exec=okular %U` and replace it with:
-> `Exec=LD_PRELOAD=${pathto}/libpoppler-qt5.so:${pathto}/libpoppler.so okular %U`
+> `Exec=LD_PRELOAD=${pathto}/libpoppler-qt6.so:${pathto}/libpoppler.so okular %U`
 > Use your customized desktop entry instead.
 
 ### Restore
