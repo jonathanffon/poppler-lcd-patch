@@ -1,6 +1,6 @@
 # poppler-lcd-patch
 
-![v24.03.0](https://badgen.net/badge/poppler-lcd/v24.03.0/green)
+![v24.06.1](https://badgen.net/badge/poppler-lcd/v24.06.1/green)
 
 PDF rendering library with subpixel engine.
 
@@ -20,15 +20,16 @@ The goal is to increase the apparent resolution of PDF content on LCD laptop.
 Suppose you are using Arch Linux. Those packages are needed to compile poppler:
 'libjpeg' 'gcc-libs' 'cairo' 'fontconfig' 'openjpeg2' 'gtk3' 'pkgconfig' 'lcms2'
 'gobject-introspection' 'icu' 'qt5-base' 'qt6-base' 'git' 'nss' 'gpgme' 'gtk-doc'
-'curl' 'cmake' 'python' 'boost'
+'curl' 'cmake' 'python' 'boost' 'glib2-devel'
 
 ```bash
-pacman -S libjpeg-turbo gcc-libs cairo fontconfig openjpeg2 gtk3 pkgconf lcms2 gobject-introspection icu qt5-base qt6-base git nss gpgme gtk-doc curl cmake python boost
+pacman -S libjpeg-turbo gcc-libs cairo fontconfig openjpeg2 gtk3 pkgconf lcms2 gobject-introspection icu qt5-base qt6-base git nss gpgme gtk-doc curl cmake python boost glib2-devel
 ```
 
 ### Build from source
 
-A script was provided to build necessary shared libraries. They will be copied to `~/.config/poppler-lcd` folder.
+A script was provided to build necessary shared libraries. Generated binaries will be copied to `~/.config/poppler-lcd` folder.
+In addition, you must use the python package provided by the official repo (`/usr/bin/python`) when building from source.
 
 ```bash
 bash gen.sh
